@@ -2,7 +2,7 @@ services:
   openvpn:
     image: d3vilh/openvpn-server
     container_name: openvpn
-    restart: unless-stopped
+    restart: always
     privileged: true
     ports:
       - "1194:1194/udp"   # openvpn UDP port
@@ -29,7 +29,7 @@ services:
   openvpn-ui:
     image: d3vilh/openvpn-ui
     container_name: openvpn-ui
-    restart: unless-stopped
+    restart: always
     privileged: true
     environment:
       - OPENVPN_ADMIN_USERNAME=admin
