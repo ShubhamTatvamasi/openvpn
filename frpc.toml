@@ -2,8 +2,14 @@ serverAddr = "openvpn.shubhamtatvamasi.com"
 serverPort = 7000
 
 [[proxies]]
-name = "openvpn_vpn"
+name = "openvpn_vpn_upd"
 type = "udp"
+localPort = 1194
+remotePort = 1194
+
+[[proxies]]
+name = "openvpn_vpn_tcp"
+type = "tcp"
 localPort = 1194
 remotePort = 1194
 
