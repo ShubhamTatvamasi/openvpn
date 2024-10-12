@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+  openvpn:
+    image: d3vilh/openvpn-server
+    container_name: openvpn
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "1194:1194/udp"   # openvpn UDP port
+      # - "1194:1194/tcp"   # openvpn TCP port
+      # - "2080:2080/tcp"  # management port. uncomment if you would like to share it with the host
+    environment:
+      TRUST_SUB: "10.0.70.0/24"
+      GUEST_SUB: "10.0.71.0/24"
+      HOME_SUB: "172.30.1.0/24"
+    volumes:
+      - ./pki:/etc/openvpn/pki
+      - ./clients:/etc/openvpn/clients
+      - ./config:/etc/openvpn/config
+      - ./staticclients:/etc/openvpn/staticclients
+      - ./log:/var/log/openvpn
+      - ./fw-rules.sh:/opt/app/fw-rules.sh
+      - ./checkpsw.sh:/opt/app/checkpsw.sh
+      - ./server.conf:/etc/openvpn/server.conf
+    cap_add:
+      - NET_ADMIN
+    depends_on:
+      - "openvpn-ui"
+
+  openvpn-ui:
+    image: d3vilh/openvpn-ui
+    container_name: openvpn-ui
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - OPENVPN_ADMIN_USERNAME=admin
+      - OPENVPN_ADMIN_PASSWORD=admin
+    volumes:
+      - ./:/etc/openvpn
+      - ./db:/opt/openvpn-ui/db
+      - ./pki:/usr/share/easy-rsa/pki
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  caddy:
+    image: caddy
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_config:
+  caddy_data:
