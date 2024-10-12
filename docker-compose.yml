@@ -11,14 +11,14 @@ services:
     environment:
       TRUST_SUB: "10.0.70.0/24"
       GUEST_SUB: "10.0.71.0/24"
-      HOME_SUB: "172.30.1.0/24"
+      HOME_SUB: "192.168.88.0/24"
     volumes:
       - ./pki:/etc/openvpn/pki
       - ./clients:/etc/openvpn/clients
       - ./config:/etc/openvpn/config
       - ./staticclients:/etc/openvpn/staticclients
       - ./log:/var/log/openvpn
-      - ./fw-rules.sh:/opt/app/fw-rules.sh
+      # - ./fw-rules.sh:/opt/app/fw-rules.sh
       - ./checkpsw.sh:/opt/app/checkpsw.sh
       - ./server.conf:/etc/openvpn/server.conf
     cap_add:
